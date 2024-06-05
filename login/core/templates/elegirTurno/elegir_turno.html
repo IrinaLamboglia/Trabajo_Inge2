@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegir Turno</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn-volver {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .btn-volver:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Elegir Turno</h1>
+
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="GET" action=".">
+            <input type="hidden" name="token" value="{{ request.GET.token }}">
+            <div class="form-group">
+                <label for="filial">Filial:</label>
+                <select id="filial" name="filial" class="form-control" onchange="this.form.submit()">
+                    <option value="">Seleccione una filial</option>
+                    {% for filial in filiales %}
+                        <option value="{{ filial.id }}" {% if selected_filial == filial.id|stringformat:"s" %}selected{% endif %}>
+                            {{ filial.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        {% if selected_filial %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="token" value="{{ request.GET.token }}">
+            <div class="form-group">
+                <label for="turno">Turnos Disponibles:</label>
+                <select id="turno" name="turno" class="form-control">
+                    <option value="">Seleccione un turno</option>
+                    {% for turno in turnos_disponibles %}
+                        <option value="{{ turno.id }}">{{ turno.fecha }} - (Cupos disponibles: {{ turno.cupos_disponibles }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Confirmar Turno</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Confirmar Turno</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas confirmar este turno?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+        <div class="btn-container">
+            <a href="{% url 'inicio' %}" class="btn-volver">Volver al Inicio</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

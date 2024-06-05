@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif; /* Fuente legible */
@@ -83,3 +84,90 @@ ul li {
 
 
 }
+=======
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif; /* Fuente legible */
+    font-size: 16px; /* Tamaño de fuente predeterminado */
+    line-height: 1.6; /* Espaciado de línea legible */
+    color: #333; /* Color de texto oscuro */
+    background-color: #f0f0f0; /* Fondo gris claro */
+}
+
+
+/* Estilos para el encabezado */
+.header {
+    display: flex; /* Utiliza flexbox para alinear la imagen y el título */
+    align-items: center; /* Alinea verticalmente los elementos dentro del contenedor */
+}
+
+.header img {
+    width: 50px; /* Ajusta el ancho de la imagen según sea necesario */
+    height: auto; /* Permite que la altura se ajuste automáticamente para mantener la proporción */
+    margin-right: 10px; /* Añade un espacio entre la imagen y el texto */
+}
+
+.header h2 {
+    font-size: 24px; /* Ajusta el tamaño del título según sea necesario */
+    margin: 0; /* Elimina el margen predeterminado para evitar espacios innecesarios */
+}
+
+
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente legible */
+    font-weight: bold; /* Texto en negrita para mayor contraste */
+    color: #333; /* Color de texto oscuro */
+}
+
+/* Enlaces */
+a {
+    color: #007bff; /* Color de enlace azul */
+    text-decoration: none; /* Elimina el subrayado predeterminado */
+}
+
+a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+/* Lista de navegación */
+ul {
+    list-style: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el relleno predeterminado */
+}
+
+ul li {
+    display: inline; /* Muestra los elementos de la lista en línea */
+    margin-right: 10px; /* Espacio entre elementos de la lista */
+}
+
+/* Bloques de contenido */
+.block {
+    padding: 20px; /* Relleno interno para el contenido */
+    margin-bottom: 20px; /* Espacio entre bloques de contenido */
+    background-color: #fff; /* Fondo blanco */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+/* Footer */
+.footer {
+    background-color: #333; /* Fondo oscuro para el pie de página */
+    color: #fff; /* Texto blanco en el pie de página */
+    padding: 20px; /* Relleno interno */
+    text-align: center; /* Texto centrado */
+}
+
+/* Media queries para hacer que el sitio sea receptivo */
+@media screen and (max-width: 768px) {
+    /* Estilos para pantallas pequeñas */
+    body {
+        font-size: 14px; /* Reducir el tamaño de la fuente para pantallas pequeñas */
+    }
+
+
+
+
+}
+>>>>>>> origin/nuevo

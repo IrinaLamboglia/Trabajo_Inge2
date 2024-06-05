@@ -1,78 +1,157 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/products-estilos.css' %}">
-
-
-
 {% block content %}
-<h2> Las Publicaciones</h2>
-  {% if publicaciones %}
+<h2>Mis Publicaciones</h2>
+
+<div class="d-flex justify-content-center mb-3">
+  <!-- Botón para mostrar las publicaciones disponibles -->
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDisponibles" aria-expanded="false" aria-controls="collapseDisponibles">
+      Disponibles
+  </button>
+  <!-- Botón para mostrar las publicaciones no disponibles -->
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseNoDisponibles" aria-expanded="false" aria-controls="collapseNoDisponibles">
+      No Disponibles
+  </button>
+</div>
+
+<div class="collapse" id="collapseDisponibles">
+    {% if publicaciones_disponibles %}
     <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Titulo</th>
-        <th scope="col">Descripcion</th>
-        <th scope="col">Nuevo</th>
-        <th scope="col">Usuario</th>
-        <th scope="col">Categoria</th>
-        <th scope="col">Imagen</th>
-      </tr>
-    </thead>
-    <tbody>
-        
-      {% for publicacion in publicaciones %}
-        {% if publicacion.categoria %}
-         <tr>
-            <td>{{publicacion.titulo}}</td>
-            <td>{{publicacion.descripcion}}</td>
-            <td>{{publicacion.nuevo}}</td>
-            <td>{{publicacion.usuario}}</td>
-            <td>{{publicacion.categoria}}</td>
-            {% if publicacion.imagen %}
-              <td scope="row"><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="...">
-            {% else %}
-              <td scope="row" ><img src="" style="height: 50px; width: 50px;" alt="no registro una imagen"></td>
-            {% endif %}
-            <td>
-            <!-- Botón de eliminar con ícono de Bootstrap -->
-              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPublicacion({{ publicacion.id }})">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                </svg>
-              </button>
-            </td>
+        <thead>
+            <tr>
+                <th scope="col">Titulo</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Nuevo</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publicacion in publicaciones_disponibles %}
+            <tr>
+                <td>{{ publicacion.titulo }}</td>
+                <td>{{ publicacion.descripcion }}</td>
+                <td>{{ publicacion.nuevo }}</td>
+                <td>{{ publicacion.usuario }}</td>
+                <td>{{ publicacion.categoria }}</td>
+                <td scope="row"><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="..."></td>
+                <td>
+                    <!-- Botón de eliminar con ícono de Bootstrap -->
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPublicacion({{ publicacion.id }})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-primary" role="alert">
+        No hay publicaciones disponibles
+    </div>
+    {% endif %}
+</div>
 
-          </tr>
+<div class="collapse" id="collapseNoDisponibles">
+    {% if publicaciones_no_disponibles %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Titulo</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Nuevo</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for publicacion in publicaciones_no_disponibles %}
+            <tr>
+                <td>{{ publicacion.titulo }}</td>
+                <td>{{ publicacion.descripcion }}</td>
+                <td>{{ publicacion.nuevo }}</td>
+                <td>{{ publicacion.usuario }}</td>
+                <td>{{ publicacion.categoria }}</td>
+                <td scope="row"><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="..."></td>
+                <td>
+                    {% if not publicacion.estado %}
+                    <span style="color: red;">La publicación aun no fue validada</span>
+                    {% endif %}
+                    {% if not publicacion.estadoCategoria %}
+                    <span style="color: red;">Categoria pausada</span>
+                    {% endif %}
+                    {% if not publicacion.trueque %}
+                    <span style="color: red;"> Publicacion finalizada</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Botón de eliminar con ícono de Bootstrap -->
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPublicacion({{ publicacion.id }})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-primary" role="alert">
+        No hay publicaciones no disponibles
+    </div>
+    {% endif %}
+</div>
 
-        {% endif %}
-      {% endfor %}
-            
-    </tbody>
-  </table>
-  {% else %}
-  <div class="alert alert-primary" role="alert">
-    Usted no tiene publicaciones cargadas...
-  </div>
-  {% endif %}
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
-  <script>
     function eliminarPublicacion(publicacionId) {
-      if (confirm("¿Estás seguro de que quieres eliminar esta publicación?")) {
-        fetch(`/eliminar_publicacion/${publicacionId}/`, {
-          method: 'DELETE',
+        if (confirm("¿Estás seguro de que quieres eliminar esta publicación?")) {
+            fetch(`/eliminar_publicacion/${publicacionId}/`, {
+             method: 'DELETE',
+             headers: {
+                 'X-CSRFToken': '{{ csrf_token }}',
+             },
+            })
+        .then(response => {
+                if (response.ok) {
+                alert("Publicación eliminada correctamente");
+                window.location.reload();
+            } else {
+                alert("Hubo un error al eliminar la publicación");
+            }
         })
-          .then(response => {
-              if (response.ok) {
-                  alert("Publicación eliminada correctamente");
-                  window.location.reload();
-              } else {
-                  alert("Hubo un error al eliminar la publicación");
-              }
-          })
-          .catch(error => console.error('Error al eliminar la publicación:', error));
-      }
-  }
-</script>
+        .catch(error => console.error('Error al eliminar la publicación:', error));
+    }
+}
 
-{% endblock content %}
+$(document).ready(function() {
+  $('.btn-primary').click(function() {
+      var target = $(this).data('target');
+      $('.collapse').not(target).collapse('hide');
+  });
+});
+</script>
+{% endblock %}

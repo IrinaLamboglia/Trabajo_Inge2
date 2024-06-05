@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de trueques a Efectivizar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cecaca5f;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .search-container button[type="submit"] {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-container button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        
+        .table th, .table td {
+            padding: 12px;
+            vertical-align: middle;
+
+            border-bottom: 5px solid #f7f7f7d0;
+        }
+        .table-hover tbody tr:hover {
+            text-align: center;
+            background-color: rgba(248, 248, 249, 0.611);
+
+            border-bottom: 5px solid #f7f7f7d0;
+
+        }
+        .table-container {
+            margin: auto; /* Centra el contenedor de la tabla horizontalmente */
+                    
+            width: fit-content; /* Ancho ajustado al contenido */
+            height: fit-content; /* Alto ajustado al contenido */
+            background-color: #dfdcdc79;
+        }
+
+        .table {
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.647);
+        }
+
+        .table thead th {
+            border-bottom: 5px solid #f7f7f7d0;
+        }
+
+        .btn {
+            margin: 2px; /* Añade margen a los botones para asegurar el espaciado */
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-content">
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver atrás</a>
+        <h1>Listado de Trueques</h1>
+
+        <!-- Formulario de búsqueda -->
+        <div class="search-container">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Ingrese uno de los códigos" value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <!-- Contenedor de la tabla -->
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Turno</th>
+                        <th scope="col">Usuario solicitante</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Usuario receptor</th>
+                        <th scope="col">Código del receptor</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publicacion in trueques %}
+                    <tr>
+                        <th scope="row">{{ publicacion.turno.fecha }}</th>
+                        <td>{{ publicacion.solicitante.email }}</td>
+                        <td>{{ publicacion.codigo_confirmacion_solicitante }}</td>
+                        <td>{{ publicacion.receptor.email }}</td>
+                        <td>{{ publicacion.codigo_confirmacion_receptor }}</td>
+                        <td>
+                            <form method="post" action="{% url 'aceptacion_trueque' publicacion.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Aceptar</button>
+                            </form>
+                            <form method="post" action="{% url 'rechazar_efectivizacion' publicacion.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Rechazar</button>
+                            </form>
+                            <form method="post" action="{% url 'penalizar_trueque' publicacion.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Penalizar Solicitante</button>
+                            </form>
+                            <form method="post" action="{% url 'penalizar_trueque' publicacion.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Penalizar Receptor</button>
+                            </form>
+                            
+
+
+
+                   
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No hay trueques para efectivizar en este momento.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    
+    
+    
+</body>
+</html>

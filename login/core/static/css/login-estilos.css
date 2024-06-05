@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
@@ -65,3 +66,72 @@ button:hover {
 .crear-cuenta a:hover {
     text-decoration: underline; /* Subrayado al pasar el mouse */
 }
+=======
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+h3 {
+    text-align: center;
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center; /* Centrar el contenido */
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: #ff0000;
+}
+
+.failed-attempts {
+    color: #ff0000;
+}
+
+/* Estilo para el enlace "Crear cuenta nueva" */
+.crear-cuenta {
+    margin-top: 20px; /* Espacio entre el formulario y el enlace */
+}
+
+.crear-cuenta a {
+    color: #007bff; /* Color del enlace */
+    text-decoration: none; /* Eliminar subrayado predeterminado */
+}
+
+.crear-cuenta a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+>>>>>>> origin/nuevo

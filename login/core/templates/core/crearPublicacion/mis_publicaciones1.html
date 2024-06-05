@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/products-estilos.css' %}">
+
+{% block content %}
+<h2> Las Publicaciones</h2>
+
+{% if publicaciones %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Titulo</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Nuevo</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for publicacion in publicaciones %}
+        {% if publicacion.categoria %}
+        <tr>
+            <td>{{ publicacion.titulo }}</td>
+            <td>{{ publicacion.descripcion }}</td>
+            <td>{{ publicacion.nuevo }}</td>
+            <td>{{ publicacion.usuario }}</td>
+            <td>{{ publicacion.categoria }}</td>
+            {% if publicacion.imagen %}
+            <td scope="row"><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="..."></td>
+            {% else %}
+            <td scope="row"><img src="" style="height: 50px; width: 50px;" alt="no registro una imagen"></td>
+            {% endif %}
+            <td>
+                <button type="button" class="btn btn-danger btn-sm eliminar-btn" data-id="{{ publicacion.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                    </svg>
+                </button>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-primary" role="alert">
+    Usted no tiene publicaciones cargadas...
+</div>
+{% endif %}
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function eliminarPublicacion(publicacionId) {
+        if (confirm("¿Estás seguro de que quieres eliminar esta publicación?")) {
+            const csrftoken = getCookie('csrftoken');
+            fetch(`/eliminar_publicacion/${publicacionId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error || "Hubo un error al eliminar la publicación");
+                } else {
+                    alert(data.message);
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Error al eliminar la publicación:', error));
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".eliminar-btn");
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                const publicacionId = this.getAttribute("data-id");
+                eliminarPublicacion(publicacionId);
+            });
+        });
+    });
+</script>
+
+{% endblock content %}
+

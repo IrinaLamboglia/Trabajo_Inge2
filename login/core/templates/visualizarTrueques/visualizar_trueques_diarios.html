@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trueques Diarios</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .message {
+            text-align: center;
+            color: red;
+        }
+        .trueque {
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trueques Diarios</h1>
+
+        {% if trueques %}
+            {% for trueque in trueques %}
+                <div class="trueque">
+                    <p><strong>Solicitante:</strong> {{ trueque.solicitante.username }}</p>
+                    <p><strong>Receptor:</strong> {{ trueque.receptor.username }}</p>
+                    <p><strong>Fecha del Turno:</strong> {{ trueque.turno.fecha }}</p>
+                    <p><strong>Filial:</strong> {{ trueque.filial.nombre }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="message">Aún no se han realizado trueques</p>
+        {% endif %}
+    </div>
+</body>
+</html>

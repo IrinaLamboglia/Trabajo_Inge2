@@ -18,14 +18,16 @@ def agregar_categoria(request):
 def mostrar_categorias(request):
     # Obtener el valor del filtro de la solicitud GET
     filtro = request.GET.get('filtro')
+    
     # Filtrar las categorías según el valor del filtro
     if filtro == 'activas':
         categorias = Categoria.objects.filter(estado=True)
-        
-        print("Consulta SQL para categorías activas:")
+        selected_option = 'activas'
     elif filtro == 'desactivadas':
         categorias = Categoria.objects.filter(estado=False)
+        selected_option = 'desactivadas'
     else:
         categorias = Categoria.objects.all()
-        print("Consulta SQL para todas las categorías:")
-    return render(request, 'agregar_categoria/mostrarCategoria.html', {'categorias': categorias})
+        selected_option = 'todas'
+    
+    return render(request, 'agregar_categoria/mostrarCategoria.html', {'categorias': categorias, 'selected_option': selected_option})

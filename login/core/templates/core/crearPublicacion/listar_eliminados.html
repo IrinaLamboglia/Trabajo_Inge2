@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/products-estilos.css' %}">
+
+{% block content %}
+<h2> Publicaciones Eliminadas </h2>
+{% if publicaciones %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Titulo</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Nuevo</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Imagen</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for publicacion in publicaciones %}
+        <tr>
+            <td>{{ publicacion.titulo }}</td>
+            <td>{{ publicacion.descripcion }}</td>
+            <td>{{ publicacion.nuevo }}</td>
+            <td>{{ publicacion.categoria }}</td>
+            {% if publicacion.imagen %}
+            <td><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="..."></td>
+            {% else %}
+            <td><img src="" style="height: 50px; width: 50px;" alt="no registro una imagen"></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-primary" role="alert">
+    No tienes publicaciones eliminadas.
+</div>
+{% endif %}
+{% endblock content %}

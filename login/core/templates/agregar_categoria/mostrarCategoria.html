@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -164,6 +163,19 @@
              background-color: #f44336;
              color: white;
          }
+         .editar-btn {
+            color: #4CAF50;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .editar-btn:hover {
+            background-color: #45a049;
+        }
      </style>
  </head>
  <body>
@@ -172,15 +184,16 @@
      <div class="filtro-container">
         <form action="{% url 'mostarCategoria' %}" method="GET">
             <label for="filtro" style="font-weight: bold; font-size: 20px; color: #333; margin-right: 10px;">Mostrar:</label>
-
+    
             <select id="filtro" name="filtro">
-                <option value="activas" {% if filtro == 'activas' %} selected {% endif %}>Activas</option>
-                <option value="desactivadas" {% if filtro == 'desactivadas' %} selected {% endif %}>Desactivadas</option>
-                <option value="todas" {% if filtro == 'todas' %} selected {% endif %}>Todas</option>
+                <option value="activas" {% if selected_option == 'activas' %} selected {% endif %}>Activas</option>
+                <option value="desactivadas" {% if selected_option == 'desactivadas' %} selected {% endif %}>Desactivadas</option>
+                <option value="todas" {% if selected_option == 'todas' %} selected {% endif %}>Todas</option>
             </select>
             <button type="submit">Filtrar</button>
         </form>
     </div>
+    
 
      <!-- Listado de categorías -->
      {% if categorias %}
@@ -193,6 +206,7 @@
                  <button type="button" class="eliminar-btn" onclick="confirmarBaja({{ categoria.id }})">
                      {{ categoria.estado|yesno:"Desactivar,Activar" }}
                  </button>
+                 <a href="{% url 'editar_categoria' categoria.id %}" class="editar-btn">Editar</a>  <!-- Botón de editar -->
              </form>
          </li>
          {% endfor %}
@@ -210,7 +224,7 @@
      {% if messages %}
      <ul class="messages">
          {% for message in messages %}
-         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+         <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
          {% endfor %}
      </ul>
      {% endif %}
@@ -251,5 +265,4 @@
      </script>
  </body>
  </html>
- 
  

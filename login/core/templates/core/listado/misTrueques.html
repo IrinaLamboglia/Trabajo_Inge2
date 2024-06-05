@@ -175,6 +175,19 @@
                         <p><strong>Solicitante: </strong> {{ elemento.solicitante.email }}</p>
                         <p><strong>Publicación ofrecida: </strong> {{ elemento.publicacionOfrecida.titulo }}</p>
                         <p><strong>Fecha de solicitud: </strong> {{ elemento.fecha_solicitud }}</p>
+                        
+                        {% if not elemento.estado %}
+                        <form action="{% url 'aceptar_trueque' elemento.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Aceptar Trueque</button> 
+                        </form>
+                         <form action="{% url 'rechazar_trueque' elemento.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Rechazar Trueque</button>
+                        </form>
+                        {% else %}
+                        <p>Trueque Aceptado</p>
+                        {% endif %}
                     </div>
                 </li>
             {% endfor %}

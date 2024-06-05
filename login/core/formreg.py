@@ -13,6 +13,7 @@ class UsuarioForm(forms.ModelForm):
             'dni',
             'telefono',
             'contraseña',
+            'filial_nombre',
         ]
 
 

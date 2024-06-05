@@ -1,0 +1,30 @@
+{% load static %}
+<!-- confirmar_eliminar_categoria.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Eliminación</title>
+</head>
+<body>
+    <div class="messages-container">
+        <h1>¿Estás seguro de que quieres eliminar la categoría "{{ categoria.nombre }}"?</h1>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Sí, eliminar</button>
+            <a href="{% url 'mostarCategoria' %}">Cancelar</a>
+        </form>
+    </div>
+
+    <!-- Bloque condicional para mostrar mensajes de Django -->
+    {% if messages %}
+        <ul class="messages">
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        </ul>
+    {% endif %}
+</body>
+</html>
+
+

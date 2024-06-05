@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -32,4 +33,40 @@
     {% block content %}{% endblock %}
 
 </body>
+=======
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cáritas Argentina</title>
+    <link rel="icon" type="image/png" href="{% static 'imagenes/logoCaritas.jpg' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'imagenes/logoCaritas.jpg' %}" alt="Logo Fundación Cáritas">
+        <h2>Fundacion Cáritas</h2>
+    </div>
+    <ul>
+        <li><a href={% url 'home' %}>Inicio</a></li>
+        <li><a href={% url 'products' %}>Productos</a></li>
+        {% if user.is_authenticated %}
+            {% if user.tipo == "administrador" %}
+                 <li><a href={% url 'mostrarBaja' %}>Baja Ayudante</a></li>
+                 <li><a href={% url 'listadoBloqueados' %}>Ver bloqueados</a></li>
+            {%  endif %}
+            <li><a href={% url 'exit' %}>Salir</a></li>
+           
+        {% else %}
+      <!-- link para ingresar es el tamplate de login  -->
+           <li><a href={% url 'login' %} >Ingresar</a></li>
+        {% endif %}
+    </ul>
+    {% block content %}{% endblock %}
+
+</body>
+>>>>>>> origin/nuevo
 </html>

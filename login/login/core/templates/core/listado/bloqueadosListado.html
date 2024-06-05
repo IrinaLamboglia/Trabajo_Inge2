@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -63,3 +64,70 @@
     </div>
 </body>
 </html>
+=======
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Usuarios Bloqueados</title>
+    <link rel="icon" type="image/png" href="{% static 'imagenes/logoCaritas.jpg' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/listadobloqueados-estilos.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        li:last-child {
+            margin-bottom: 0;
+        }
+        .email {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Listado de Usuarios Bloqueados</h1>
+        {% if elementos %}
+        <ul>
+            {% for elemento in elementos %}
+                <li>
+                    <span class="email">{{ elemento.email }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+           <p>No hay usuarios bloqueados disponibles</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+>>>>>>> origin/nuevo

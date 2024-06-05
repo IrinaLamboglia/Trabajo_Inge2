@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Categoría</title>
+    <style>
+        body {
+            background-image: url('https://i.pinimg.com/originals/98/da/8f/98da8f9306de27424460d16e53938b72.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        .form-container {
+            text-align: center;
+            margin: 35px auto;
+            padding:  100px;
+
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label {
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 30px;
+        }
+        .form-container input {
+            padding: 20px;
+            margin-bottom: 0px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 50%;
+            font-size: 20px;
+        }
+        .form-container button {
+            padding: 15px 30px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        #volver {
+            position: fixed;
+            top: 40px;
+            left: 10px;
+            background-color: transparent;
+            border: none;
+            color: black;
+            font-size: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .error-message {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+            color: red;
+        }
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .modal-button.btn-accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .modal-button.btn-accept:hover {
+            background-color: #45a049;
+        }
+
+        .modal-button.btn-cancel {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .modal-button.btn-cancel:hover {
+            background-color: #db4436;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Categoría: {{ nombre_original }}</h1>
+    <form id="editarForm" method="POST" class="form-container">
+        {% csrf_token %} 
+        <label for="id_nombre">Nombre:</label>
+        {{ form.nombre }}
+
+        <button type="button" onclick="openModal()" class="form-container button" >Guardar Cambios</button>
+        {% if form.errors.nombre %}
+            <div class="error-message">
+                {{ form.errors.nombre }}
+            </div>
+        {% endif %}
+    </form>
+
+    <!-- Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p>¿Estás seguro de que deseas editar esta categoría?</p>
+            <button id="confirmBtn" class="modal-button btn-accept" onclick="confirmEdicion()">Aceptar</button>
+            <button id="cancelBtn" class="modal-button btn-cancel" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            var modal = document.getElementById("confirmModal");
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("confirmModal");
+            modal.style.display = "none";
+        }
+
+        function confirmEdicion() {
+            document.getElementById("editarForm").submit();
+        }
+    </script>
+
+    <a href="{% url 'mostarCategoria' %}" id="volver" style="text-decoration: none; color: black;">
+        &larr; Volver
+    </a>
+</body>
+</html>

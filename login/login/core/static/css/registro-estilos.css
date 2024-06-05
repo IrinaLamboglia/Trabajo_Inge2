@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
@@ -50,3 +51,57 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #0056b3;
 }
+=======
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="email"],
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="tel"] {
+    width: calc(100% - 22px); /* Reducir el ancho para tener en cuenta el padding y el borde */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Asegura que el ancho incluya el padding y el borde */
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+>>>>>>> origin/nuevo

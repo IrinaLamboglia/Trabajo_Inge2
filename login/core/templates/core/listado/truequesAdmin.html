@@ -153,32 +153,8 @@
                         <img src="{{ elemento.publicacionOfrecida.imagen.url }}" alt="{{ elemento.publicacionOfrecida.titulo }}">
                     </div>
                     <div class="publicacion-info">
-                        <p><strong>Usuario receptor: </strong> {{ elemento.publicacion.usuario.email }}</p>
-                        <p><strong>Título de la publicación solicitada:</strong> {{ elemento.publicacion.titulo }}</p>
-                        <p><strong>Solicitante:</strong> {{ elemento.solicitante.email }}</p>
-                        <p><strong>Título de la publicación ofrecida: </strong> {{ elemento.publicacionOfrecida.titulo }}</p>
-                        <p><strong>Fecha de solicitud:</strong> {{ elemento.fecha_solicitud }}</p>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-           <p>Aún no se han realizado trueques</p>
-        {% endif %}
-
-
-     <!--  {% if elementos %}
-        <ul>
-            {% for elemento in elementos %}
-                <li>
-                    <div class="imagen-container">
-                        <img src="{{ elemento.publicacion.imagen.url }}" alt="{{ elemento.publicacion.titulo }}">
-                        <img src="{{ elemento.publicacionOfrecida.imagen.url }}" alt="{{ elemento.publicacionOfrecida.titulo }}">
-                    </div>
-                    <div class="publicacion-info">
                         <p><strong>Usuario receptor :</strong> {{ elemento.receptor.email }}</p>
                         <p><strong>Título de la publicación solicitada:</strong> {{ elemento.publicacion.titulo }}</p>
- esto se podria sacar                       <p><strong>Descripción:</strong> {{ elemento.publicacion.descripcion }}</p>
                         <p><strong>Solicitante:</strong> {{ elemento.solicitante.email }}</p>
                         <p><strong>Titulo de la publicación ofrecida:</strong> {{ elemento.publicacionOfrecida.titulo }}</p>
                         <p><strong>Fecha de solicitud: </strong> {{ elemento.fecha_solicitud }}</p>
@@ -194,7 +170,8 @@
         {% else %}
              <p>Aún no se han realizado trueques</p>
         {% endif %}
-    -->
+
+
 
 
 
