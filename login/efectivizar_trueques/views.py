@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.models import Trueque,Solicitud
+from core.models import Trueque,Solicitud,Usuario,Filial,Turno
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 
@@ -7,22 +7,46 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.utils import timezone
 import datetime
-
+from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.db.models import Q
+import datetime
 def efectivizar_trueques(request):
-    usuario_actual =get_user_model().objects.get(pk=request.user.id)
-    # Obtener el usuario actual
-    filial=usuario_actual.filial # Acceder a la filial del usuario desde el modelo
-    today = datetime.date.today()
+    usuario_actual = get_user_model().objects.get(pk=request.user.id)
+   
+    # Obtener la filial asociada al usuario actual
+    filial_usuario = usuario_actual.filial_nombre
+    
+    # Obtener la fecha actual
+    today = "08/06/2024"
 
-    query = request.GET.get('q')
-    if query:
-        trueques = Trueque.objects.filter(
-            Q(codigo_confirmacion_solicitante=query) | Q(codigo_confirmacion_receptor=query)
-        )
-        if not trueques.exists():
-            messages.error(request, 'No se encontró ningún trueque con el código proporcionado.')
+    # Inicializar trueques con una lista vacía
+    trueques = []
+
+    # Filtrar los turnos basados en la fecha y la filial del usuario
+    turnos = Turno.objects.filter( filial__nombre=filial_usuario)
+
+    # Verificar si se encontraron turnos para la fecha y la filial del usuario
+    if turnos.exists():
+        # Si se encontraron turnos, obtener el primero
+        turno_actual = turnos.first()
+        
+        # Filtrar los Trueques basados en el turno actual y otros criterios
+        query = request.GET.get('q')
+        if query:
+            trueques = Trueque.objects.filter(
+                Q(codigo_confirmacion_solicitante=query) | Q(codigo_confirmacion_receptor=query),
+                turno=turno_actual  # Filtrar por el turno actual
+            )
+            if not trueques.exists():
+                messages.error(request, 'No se encontró ningún trueque con el código proporcionado.')
+        else:
+            trueques = Trueque.objects.filter(turno=turno_actual, aceptado=False, confirmado=True)
     else:
-        trueques = Trueque.objects.filter(aceptado=False, confirmado=True,filial=filial, turno=today)
+        # Si no se encontraron turnos para la fecha y la filial del usuario, manejar la situación apropiadamente
+        messages.error(request, 'No se encontraron turnos para la fecha y la filial especificadas.')
+        
+
     return render(request, 'efectivizar_trueque/efectivizar_trueque.html', {'trueques': trueques})
 
 def enviar_correo_ayudante(ayudante):
@@ -35,12 +59,14 @@ def aceptacion_trueque(request, id):
     print("estoty")
     trueque = Trueque.objects.get(id=id)
     trueque.aceptado = True
-    trueque.fecha_efectivizacion = timezone.now()  # Asigna la fecha y hora actual
-    solicitud = Solicitud.objects.filter(publicacion=trueque.solicitante, publicacionOfrecida=trueque.receptor).first()
+    trueque.fecha_efectivizacion = timezone.now().date() # Asigna la fecha y hora actual
+    solicitud = Solicitud.objects.filter(solicitante=trueque.solicitante, publicacionOfrecida__usuario=trueque.receptor).first()
 
     if solicitud:
         solicitud.realizado = True
+        solicitud.publicacion.estado=False
         solicitud.save()
+
     trueque.save()
     enviar_correo_ayudante(trueque.solicitante)
     enviar_correo_ayudante(trueque.receptor)
@@ -49,14 +75,20 @@ def aceptacion_trueque(request, id):
     return redirect('efectivizar_trueque')
 
 
-
 def rechazar_efectivizacion(request, id):
-    trueque = get_object_or_404(Trueque, id=id)
-    solicitud = Solicitud.objects.filter(publicacion=trueque.solicitante, publicacionOfrecida=trueque.receptor).first()
+    print(id)
+    try:
+        trueque = Trueque.objects.get(id=id)
+    except Trueque.DoesNotExist:
+        # Manejar el caso en que no se encuentre el Trueque con el ID proporcionado
+        messages.error(request, 'El Trueque no existe.')
+        return redirect('efectivizar_trueque')
     
+    solicitud = Solicitud.objects.filter(solicitante=trueque.solicitante, publicacionOfrecida__usuario=trueque.receptor).first()
+
     if solicitud:
         # Reactivar las publicaciones
-        solicitud.estado=False
+        solicitud.estado = False
         solicitud.publicacion.trueque = False
         solicitud.publicacionOfrecida.trueque = False
 
@@ -67,13 +99,11 @@ def rechazar_efectivizacion(request, id):
         # Eliminar la solicitud
         solicitud.delete()
 
-    # Eliminar el truequesolicitud = Solicitud.objects.filter(publicacion=trueque.solicitante, publicacionOfrecida=trueque.receptor).first()
-    
+    # Eliminar el Trueque
     trueque.delete()
 
     messages.success(request, 'El trueque ha sido rechazado y las publicaciones reactivadas.')
-    return redirect('efectivizar_trueques')
-
+    return redirect('efectivizar_trueque')
 
 # views.py
 def penalizar_trueque(request, trueque_id):

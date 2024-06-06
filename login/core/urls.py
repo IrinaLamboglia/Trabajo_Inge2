@@ -32,7 +32,7 @@ from confirmarTurno.views import confirmar_turno
 from visualizarTrueques.views import visualizar_trueques_diarios
 from efectivizar_trueques.views import efectivizar_trueques,aceptacion_trueque,penalizar_trueque,rechazar_efectivizacion
 from rechazarTrueque.views import rechazar_trueque
-
+from rechazarTurno.views import rechazar_turno
 urlpatterns = [
     path('', home, name='home'),
     path('products/', products,name='products'),
@@ -94,9 +94,10 @@ urlpatterns = [
     path('elegir-turno/<int:trueque_id>/', elegir_turno, name='elegir_turno'),
     
     path('confirmar-turno/<int:trueque_id>/', confirmar_turno, name='confirmar_turno'),
+    path('rechazar-turno/<int:trueque_id>/', rechazar_turno, name='rechazar_turno'),
 
     path('trueques_diarios/', visualizar_trueques_diarios, name='visualizar_trueques_diarios'),
-    path('efectivizar_trueque/', efectivizar_trueques, name='efectivizar_trueque'),
+    path('efectivizar_trueques/', efectivizar_trueques, name='efectivizar_trueque'),
     path('aceptacion_trueque/<int:id>', aceptacion_trueque, name='aceptacion_trueque'),
     path('rechazar_efectivizacion/<int:id>', rechazar_efectivizacion, name='rechazar_efectivizacion'),
     path('penalizar_trueque/<int:trueque_id>/', penalizar_trueque, name='penalizar_trueque'),

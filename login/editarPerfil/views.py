@@ -2,6 +2,14 @@ from datetime import date
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from core.models import Usuario, Filial
+
+from django.core.mail import send_mail
+def enviar_correo_ayudante(ayudante):
+    asunto = "Se edito tu informacion "
+    mensaje = f"¡Hola {ayudante.nombre} {ayudante.apellido}! Se ha cambiado tu informacion registrada en nuestra plataforma. Te enviamos tu informacion, trabajas en la filial {ayudante.filial_nombre} para que puedas iniciar sesion: Nombre de usuario: {ayudante.email} y la contraseña:{ayudante.contraseña}. Saludos."
+    correo_destino = ayudante.email
+    send_mail(asunto, mensaje, 'tucorreo@gmail.com', [correo_destino])
+
 def editar_ayudante(request, id):
     ayudante = get_object_or_404(Usuario, id=id)
 
@@ -33,16 +41,33 @@ def editar_ayudante(request, id):
             if age < 18:
                 messages.error(request, 'El usuario debe tener al menos 18 años.')
             else:
-                # Actualizar la información del ayudante
-                ayudante.email = nuevo_email
-                ayudante.nombre = nuevo_nombre
-                ayudante.apellido = nuevo_apellido
-                ayudante.filial_nombre = nueva_filial
-                ayudante.dni = nuevo_dni
-                ayudante.fecha_nacimiento = nueva_fecha_nacimiento
-                ayudante.telefono = nuevo_telefono
-                ayudante.contraseña = nueva_contrasena
-                ayudante.save()
+                # Verificar si algún dato importante ha cambiado y enviar correo
+                if (ayudante.email!= nuevo_email or
+                    ayudante.filial_nombre != nueva_filial or
+                    ayudante.contraseña!= nueva_contrasena):
+                    
+                        # Actualizar la información del ayudante
+                    ayudante.email = nuevo_email
+                    ayudante.nombre = nuevo_nombre
+                    ayudante.apellido = nuevo_apellido
+                    ayudante.filial_nombre = nueva_filial
+                    ayudante.dni = nuevo_dni
+                    ayudante.fecha_nacimiento = nueva_fecha_nacimiento
+                    ayudante.telefono = nuevo_telefono
+                    ayudante.contraseña = nueva_contrasena
+                    ayudante.save()
+                    enviar_correo_ayudante(ayudante)
+                else:
+                    # Actualizar la información del ayudante
+                    ayudante.email = nuevo_email
+                    ayudante.nombre = nuevo_nombre
+                    ayudante.apellido = nuevo_apellido
+                    ayudante.filial_nombre = nueva_filial
+                    ayudante.dni = nuevo_dni
+                    ayudante.fecha_nacimiento = nueva_fecha_nacimiento
+                    ayudante.telefono = nuevo_telefono
+                    ayudante.contraseña = nueva_contrasena
+                    ayudante.save()
                 messages.success(request, 'Información del ayudante actualizada correctamente.')
                 return redirect('home')
         

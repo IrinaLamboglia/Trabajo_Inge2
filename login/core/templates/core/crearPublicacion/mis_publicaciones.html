@@ -39,10 +39,11 @@
                 <td>{{ publicacion.categoria }}</td>
                 <td scope="row"><img src="{{ publicacion.imagen.url }}" style="height: 50px; width: 50px;" alt="..."></td>
                 <td>
-                    <!-- Botón de eliminar con ícono de Bootstrap -->
-                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPublicacion({{ publicacion.id }})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    <button type="button" class="btn btn-danger btn-sm eliminar-btn" data-id="{{ publicacion.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                         </svg>
                     </button>
                 </td>
@@ -93,10 +94,11 @@
                     {% endif %}
                 </td>
                 <td>
-                    <!-- Botón de eliminar con ícono de Bootstrap -->
-                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPublicacion({{ publicacion.id }})">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    <button type="button" class="btn btn-danger btn-sm eliminar-btn" data-id="{{ publicacion.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                         </svg>
                     </button>
                 </td>
@@ -112,6 +114,7 @@
 </div>
 
 <script>
+    
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -129,29 +132,47 @@
 
     function eliminarPublicacion(publicacionId) {
         if (confirm("¿Estás seguro de que quieres eliminar esta publicación?")) {
+            const csrftoken = getCookie('csrftoken');
             fetch(`/eliminar_publicacion/${publicacionId}/`, {
-             method: 'DELETE',
-             headers: {
-                 'X-CSRFToken': '{{ csrf_token }}',
-             },
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                }
             })
-        .then(response => {
-                if (response.ok) {
-                alert("Publicación eliminada correctamente");
-                window.location.reload();
-            } else {
-                alert("Hubo un error al eliminar la publicación");
-            }
-        })
-        .catch(error => console.error('Error al eliminar la publicación:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error || "Hubo un error al eliminar la publicación");
+                } else {
+                    alert(data.message);
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Error al eliminar la publicación:', error));
+        }
     }
-}
 
-$(document).ready(function() {
-  $('.btn-primary').click(function() {
-      var target = $(this).data('target');
-      $('.collapse').not(target).collapse('hide');
-  });
-});
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".eliminar-btn");
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                const publicacionId = this.getAttribute("data-id");
+                eliminarPublicacion(publicacionId);
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function() {
+                const target = document.querySelector(this.dataset.target);
+                document.querySelectorAll('.collapse').forEach(collapse => {
+                    if (collapse !== target) {
+                        collapse.classList.remove('show');
+                    }
+                });
+            });
+        });
+    });
 </script>
 {% endblock %}

@@ -222,6 +222,11 @@ def formularioreg(request):
                 usuario.tipo = "ayudante"
                 usuario.filial_nombre=filial_nombre
                 usuario.save()
+                
+                # Actualizar el campo ayudante en el modelo Filial
+                filial = Filial.objects.get(nombre=filial_nombre)
+                filial.ayudante = usuario
+                filial.save()
                 enviar_correo_ayudante(usuario)
                 
                 return redirect('home')
@@ -238,29 +243,6 @@ def formularioreg(request):
 
     return render(request, 'registration/registro.html', {'form': form})
 
-#def formularioreg(request):
-    print("Ejecutando recibo de registro")
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST)
-        print("estoy en el primer if")
-        if form.is_valid():
-            print("El formulario es válido")
-            usuario = form.save()
-            
-            if (request.user.is_authenticated):
-                if (request.user.tipo == "administrador"):
-                     usuario.email = usuario.email  # Establecer el nombre de usuario como el correo electrónico
-                     usuario.tipo="ayudante"
-                     usuario.save()
-                     enviar_correo_ayudante(request.user)
-                     return redirect('home')
-            form.save()
-            return redirect('login')
-    else:
-        print("El formulario es inválido")
-        form = UsuarioForm()
-
-    return render(request, 'registration/registro.html', {'form': form})
 
 #perfecto
 def mostrarBaja(request):
@@ -466,7 +448,7 @@ def mis_publicaciones1(request):
 
 
 def mis_publicaciones(request):
-    publicaciones_disponibles = Publicacion.objects.filter(usuario=request.user, estado=True, estadoCategoria=True, trueque=True)
+    publicaciones_disponibles = Publicacion.objects.filter(usuario=request.user, estado=True, estadoCategoria=True,trueque=False)
     publicaciones_no_disponibles = Publicacion.objects.filter(usuario=request.user).exclude(estado=True, estadoCategoria=True)
     context = {
         'publicaciones_disponibles': publicaciones_disponibles,
@@ -475,32 +457,32 @@ def mis_publicaciones(request):
     return render(request, 'core/crearPublicacion/mis_publicaciones.html', context)
 
 @csrf_exempt
-def eliminar_publicacion(request, publicacion_id):
+#def eliminar_publicacion(request, publicacion_id):
 
-    print("fuera del try")
-    if request.method == 'DELETE':
-        try:
-            print("aca")
-            print("entra al try")
+ #   print("fuera del try")
+  #  if request.method == 'DELETE':
+   #     try:
+    #        print("aca")
+     #       print("entra al try")
             
-            publicacion = Publicacion.objects.get(pk=publicacion_id)
-            print("entrass")
-            publicacion.delete()
+      #      publicacion = Publicacion.objects.get(pk=publicacion_id)
+       #     print("entrass")
+        #    #publicacion.trueque=True
+         #   publicacion.delete()
            
-            mensaje = 'La publicación ha sido eliminada correctamente.'
-            return JsonResponse({'message': mensaje}, status=200)
-        except Publicacion.DoesNotExist:
+          #  mensaje = 'La publicación ha sido eliminada correctamente.'
+           # return JsonResponse({'message': mensaje}, status=200)
+      #  except Publicacion.DoesNotExist:
             
-            mensaje = 'La publicación no existe.'
-            return JsonResponse({'error': mensaje}, status=404)
-    else:
-        return JsonResponse({'error': 'Método no permitido'}, status=405)
+       #     mensaje = 'La publicación no existe.'
+         #   return JsonResponse({'error': mensaje}, status=404)
+    #else:
+        #return JsonResponse({'error': 'Método no permitido'}, status=405)
     
 
 
 
 
-   # views.py
 
 
 @login_required
@@ -590,9 +572,9 @@ def eliminar_publicacion(request, publicacion_id):
                 except Exception as e:
                     return JsonResponse({'error': 'Error al enviar el correo: ' + str(e)}, status=500)
             else:
-                publicacion.estado=True
-                publicacion.eliminada=True
+                publicacion.estado=False
                 publicacion.save()
+                publicacion.delete()
                 return JsonResponse({'message': 'Publicación marcada como eliminada.'}, status=200)
         
            
