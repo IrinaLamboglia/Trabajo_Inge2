@@ -71,32 +71,6 @@ class Publicacion(models.Model):
 email= models.EmailField(unique=True)
 
 
-
-class Solicitud(models.Model):
-    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE, related_name='solicitudes')
-    fecha_solicitud = models.DateTimeField(default=timezone.now)
-    estado = models.BooleanField(default=False)
-    publicacionOfrecida = models.ForeignKey(Publicacion, on_delete=models.CASCADE, related_name='ofrecimientos')
-    rechazado = models.BooleanField(default=False)  # Nuevo campo
-    realizado= models.BooleanField(default=False)
-
-
-    def rechazar(self):
-        self.realizado = True
-        self.save()
-    
-    def __str__(self):
-        return f"{self.solicitante} solicita {self.publicacion}"
-    
-    def aceptar(self):
-        self.estado = True
-        self.publicacion.trueque = True
-        self.publicacionOfrecida.trueque = True
-        self.publicacion.save()
-        self.publicacionOfrecida.save()
-        self.save()  
-    
 class Filial(models.Model):
     ayudante = models.ForeignKey(Usuario, on_delete=models.CASCADE,null=True)
     nombre = models.CharField(max_length=20)
@@ -134,3 +108,30 @@ class Trueque(models.Model):
     def generar_token(self):
         self.token = secrets.token_hex(16)
         self.save()
+
+
+class Solicitud(models.Model):
+    solicitante = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE, related_name='solicitudes')
+    fecha_solicitud = models.DateTimeField(default=timezone.now)
+    estado = models.BooleanField(default=False)
+    publicacionOfrecida = models.ForeignKey(Publicacion, on_delete=models.CASCADE, related_name='ofrecimientos')
+    rechazado = models.BooleanField(default=False)  # ESTO SE BORRA
+    realizado= models.BooleanField(default=False)
+  
+
+    def rechazar(self):
+        self.realizado = True
+        self.save()
+    
+    def __str__(self):
+        return f"{self.solicitante} solicita {self.publicacion}"
+    
+    def aceptar(self):
+        self.estado = True
+        self.publicacion.trueque = True
+        self.publicacionOfrecida.trueque = True
+        self.publicacion.save()
+        self.publicacionOfrecida.save()
+        self.save()  
+    

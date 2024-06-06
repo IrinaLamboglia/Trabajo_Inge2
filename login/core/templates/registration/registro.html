@@ -76,10 +76,13 @@
 
             {% if user.is_authenticated %}
                 {% if user.tipo == "administrador" %}
-                    <label for="filial">FILIAL:</label><br>
-                    <input type="text" id="filial" name="filial" required><br>
-                    <span class="error-message">{{ form.filial.errors }}</span>
-                 {% endif %}
+                    <div class="form-group">
+                        <label for="filial">FILIAL:</label><br>
+                        <input type="text" id="filial" name="filial" required class="form-control"><br>
+                        <div class="invalid-feedback">Por favor, ingrese la Filial.</div>
+                        <span class="error-message">{{ form.filial.errors }}</span>
+                    </div>
+                {% endif %}
             {% endif %}     
             
             {% if messages %}

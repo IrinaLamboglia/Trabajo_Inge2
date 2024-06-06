@@ -12,7 +12,7 @@ def rechazar_trueque(request, solicitud_id):
     solicitud = get_object_or_404(Solicitud, id=solicitud_id)
 
     if request.method == 'POST':
-        solicitud.rechazar()
+        
         enviar_email_rechazo_turno(solicitud)
         solicitud.delete()
         messages.success(request, 'El trueque ha sido rechazado con éxito.')

@@ -8,18 +8,14 @@
     <title>Editar Ayudante</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/registro-estilos.css' %}"> 
     <style>
-<<<<<<< HEAD
         body{
             background-color: rgba(168, 166, 166, 0.775);
         }
-=======
->>>>>>> origin/nuevo
         .contenedor{
             margin-bottom: 2%;
             position: relative;
             width: 100%; /* Ajusta el ancho según sea necesario */
             height: 10%; /* Establece la altura al 100% del viewport */
-<<<<<<< HEAD
            
             text-align: center;
         }
@@ -36,25 +32,18 @@
             text-decoration: none; /* Elimina el subrayado del texto */
             transition: background-color 0.3s; /* Agrega una transición suave para el cambio de color de fondo */
         }
-=======
-            background-color: #f0f0f0;
-            text-align: center;
-        }
->>>>>>> origin/nuevo
+        
         .cartel {
             text-align: center;
             max-width: 500px;
             padding: 0;
             margin: 0;
-<<<<<<< HEAD
             background-color: rgb(255, 0, 0); /* Fondo semitransparente para los mensajes */
             font-size: 20px;
             color: rgb(7, 7, 7);
-=======
             background-color: rgba(255, 0, 0, 0.2); /* Fondo semitransparente para los mensajes */
             font-size: 20px;
             color: red;
->>>>>>> origin/nuevo
             display: inline-block; /* Hace que el contenedor se ajuste automáticamente a su contenido */
             border-radius: 5px; /* Añade esquinas redondeadas al contenedor */
         }
@@ -74,17 +63,9 @@
    
 </head>
 <body>
-<<<<<<< HEAD
     
     <h2>Editar Ayudante</h2>
     
-=======
-    <h2>Editar Ayudante</h2>
-     <!-- Botón Volver -->
-     <a href="{% url 'home' %}" id="volver" style="text-decoration: none; color: black;">
-        &larr; Volver
-    </a>
->>>>>>> origin/nuevo
     {% if messages %}
         <div class="contenedor">
         {% for message in messages %}
@@ -104,7 +85,7 @@
         <input type="text" id="nuevo_apellido" name="nuevo_apellido" value="{{ ayudante.apellido }}" required>
         
         <label for="nueva_filial">Filial:</label>
-        <input type="text" id="nueva_filial" name="nueva_filial" value="{{ ayudante.filial }}" required>
+        <input type="text" id="nueva_filial" name="nueva_filial" value="{{ ayudante.filial_nombre }}" required>
         
         <label for="nuevo_dni">DNI:</label>
         <input type="text" id="nuevo_dni" name="nuevo_dni" value="{{ ayudante.dni }}" required>

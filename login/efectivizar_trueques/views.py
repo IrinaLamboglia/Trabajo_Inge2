@@ -10,8 +10,8 @@ import datetime
 
 def efectivizar_trueques(request):
     usuario_actual =get_user_model().objects.get(pk=request.user.id)
- # Obtener el usuario actual
-    #filial=usuario_actual.filial # Acceder a la filial del usuario desde el modelo
+    # Obtener el usuario actual
+    filial=usuario_actual.filial # Acceder a la filial del usuario desde el modelo
     today = datetime.date.today()
 
     query = request.GET.get('q')
@@ -22,7 +22,7 @@ def efectivizar_trueques(request):
         if not trueques.exists():
             messages.error(request, 'No se encontró ningún trueque con el código proporcionado.')
     else:
-        trueques = Trueque.objects.filter(aceptado=False, confirmado=True) #filial=filial, turno=today
+        trueques = Trueque.objects.filter(aceptado=False, confirmado=True,filial=filial, turno=today)
     return render(request, 'efectivizar_trueque/efectivizar_trueque.html', {'trueques': trueques})
 
 def enviar_correo_ayudante(ayudante):
@@ -35,8 +35,12 @@ def aceptacion_trueque(request, id):
     print("estoty")
     trueque = Trueque.objects.get(id=id)
     trueque.aceptado = True
-    trueque.fecha_aceptacion = timezone.now() 
-     # Asigna la fecha y hora actual
+    trueque.fecha_efectivizacion = timezone.now()  # Asigna la fecha y hora actual
+    solicitud = Solicitud.objects.filter(publicacion=trueque.solicitante, publicacionOfrecida=trueque.receptor).first()
+
+    if solicitud:
+        solicitud.realizado = True
+        solicitud.save()
     trueque.save()
     enviar_correo_ayudante(trueque.solicitante)
     enviar_correo_ayudante(trueque.receptor)
@@ -52,15 +56,19 @@ def rechazar_efectivizacion(request, id):
     
     if solicitud:
         # Reactivar las publicaciones
+        solicitud.estado=False
         solicitud.publicacion.trueque = False
+        solicitud.publicacionOfrecida.trueque = False
+
         solicitud.publicacionOfrecida.estado = False
         solicitud.publicacion.save()
         solicitud.publicacionOfrecida.save()
-
+         
         # Eliminar la solicitud
         solicitud.delete()
 
-    # Eliminar el trueque
+    # Eliminar el truequesolicitud = Solicitud.objects.filter(publicacion=trueque.solicitante, publicacionOfrecida=trueque.receptor).first()
+    
     trueque.delete()
 
     messages.success(request, 'El trueque ha sido rechazado y las publicaciones reactivadas.')
@@ -81,10 +89,14 @@ def penalizar_trueque(request, trueque_id):
         # Manejar la solicitud (reactivar publicaciones y eliminar solicitud)
         solicitud = Solicitud.objects.filter(solicitante=trueque.solicitante, publicacionOfrecida__usuario=trueque.receptor).first()
         if solicitud:
+            solicitud.estado=False
             solicitud.publicacion.trueque = False
+            solicitud.publicacionOfrecida.trueque = False
+
             solicitud.publicacionOfrecida.estado = False
             solicitud.publicacion.save()
             solicitud.publicacionOfrecida.save()
+            # Eliminar la solicitud
             solicitud.delete()
 
         # Eliminar el trueque

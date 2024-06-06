@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.http import HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import FailedLoginAttempt, Publicacion, Solicitud, Usuario, UsuarioBloqueado, porDesbloquear, Categoria,Trueque
+from .models import FailedLoginAttempt, Publicacion, Solicitud, Usuario, UsuarioBloqueado, porDesbloquear, Categoria,Trueque,Filial
 
 from django.contrib.auth import login
 from . formreg import UsuarioForm
@@ -207,14 +207,23 @@ def formularioreg(request):
         if form.is_valid():
             print("es valido")
             usuario = form.save(commit=False)
+            usuario.puntuacion=5
             if request.user.is_authenticated and request.user.tipo == "administrador":
-                filial = usuario.filial_nombre
-                if Usuario.objects.filter(filial_nombre=filial).exists():
+                filial_nombre = request.POST.get('filial')
+                
+                # Verificar si la filial está registrada
+                if not Filial.objects.filter(nombre=filial_nombre).exists():
+                    messages.error(request, 'La filial ingresada no está registrada en el sistema.')
+                    return render(request, 'registration/registro.html', {'form': form})
+
+                if Usuario.objects.filter(filial_nombre=filial_nombre).exists():
                     messages.error(request, 'Ya existe un usuario registrado en esta filial')
                     return render(request, 'registration/registro.html', {'form': form})
                 usuario.tipo = "ayudante"
-                enviar_correo_ayudante(usuario)
+                usuario.filial_nombre=filial_nombre
                 usuario.save()
+                enviar_correo_ayudante(usuario)
+                
                 return redirect('home')
             else:
                 usuario.save()
