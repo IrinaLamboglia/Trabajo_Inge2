@@ -60,10 +60,11 @@ def aceptacion_trueque(request, id):
     trueque = Trueque.objects.get(id=id)
     trueque.aceptado = True
     trueque.fecha_efectivizacion = timezone.now().date() # Asigna la fecha y hora actual
-    solicitud = Solicitud.objects.filter(solicitante=trueque.solicitante, publicacionOfrecida__usuario=trueque.receptor).first()
+    solicitud = Solicitud.objects.filter(solicitante=trueque.solicitante, publicacion__usuario=trueque.receptor).first()
 
     if solicitud:
         solicitud.realizado = True
+        print("entro")
         solicitud.publicacion.estado=False
         solicitud.save()
 
